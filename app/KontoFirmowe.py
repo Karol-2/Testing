@@ -1,3 +1,7 @@
+import os
+import requests
+from datetime import  date
+
 from app.Konto import Konto
 
 
@@ -20,3 +24,14 @@ class KontoFirmowe(Konto):
             self.zaksieguj_przelew_przychodzacy(kwota)
             return True
         return False
+
+    @classmethod
+    def czy_nip_istnieje(cls,nip):
+        gov_url = os.getenv('BANK_APP_MF_URL',"https://wl-test.mf.gov.pl/")
+        data = date.today()
+        url =f"{gov_url}api/search/nip/{nip}?date={data}"
+        response = requests.get(url)
+        if response.status_code == 200:
+            return True
+        else:
+            cls.nip="PRANIE!!!"
