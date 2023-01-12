@@ -47,8 +47,8 @@ class Konto:
         ostatnie3 = self.historia[-3:]
         ostatnie5 = self.historia[-5:]
 
-        if len(self.historia) >=5 and ostatnie3[0]>0 and ostatnie3[1]>0 and ostatnie5[2]>0: # a
-            if sum(ostatnie5) > kwota: # b
+        if len(self.historia) >= 5 and ostatnie3[0] > 0 and ostatnie3[1] > 0 and ostatnie5[2] > 0:  # a
+            if sum(ostatnie5) > kwota:  # b
                 self.zaksieguj_przelew_przychodzacy(kwota)
                 return True
             else:
@@ -57,19 +57,20 @@ class Konto:
             return False
 
     @classmethod
-    def czy_nip_istnieje(cls,nip):
-        gov_url = os.getenv('BANK_APP_MF_URL',"https://wl-test.mf.gov.pl/")
+    def czy_nip_istnieje(cls, nip):
+        gov_url = os.getenv('BANK_APP_MF_URL', "https://wl-test.mf.gov.pl/")
         data = date.today()
-        url =f"{gov_url}api/search/nip/{nip}?date={data}"
+        url = f"{gov_url}api/search/nip/{nip}?date={data}"
         response = requests.get(url)
         if response.status_code == 200:
             return True
         else:
-            cls.nip="PRANIE!!!"
-    def Wyslij_historie_na_mail(self,adresat,smtp_connector):
-        temat=f"Wyciąg z dnia {date.today()}"
+            cls.nip = "PRANIE!!!"
+
+    def Wyslij_historie_na_mail(self, adresat, smtp_connector):
+        temat = f"Wyciąg z dnia {date.today()}"
         tresc = f"Twoja historia konta to: {self.historia}"
-        powodzenie = smtp_connector.wyslij(temat,tresc,adresat)
+        powodzenie = smtp_connector.wyslij(temat, tresc, adresat)
         if (powodzenie):
             return True
         else:
