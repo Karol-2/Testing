@@ -1,1 +1,3 @@
-omit = app/KontoFirmowe.py
+[run]
+omit =
+       app/KontoFirmowe.py
