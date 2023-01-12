@@ -56,16 +56,6 @@ class Konto:
         else:
             return False
 
-    @classmethod
-    def czy_nip_istnieje(cls, nip):
-        gov_url = os.getenv('BANK_APP_MF_URL', "https://wl-test.mf.gov.pl/")
-        data = date.today()
-        url = f"{gov_url}api/search/nip/{nip}?date={data}"
-        response = requests.get(url)
-        if response.status_code == 200:
-            return True
-        else:
-            cls.nip = "PRANIE!!!"
 
     def Wyslij_historie_na_mail(self, adresat, smtp_connector):
         temat = f"Wyciąg z dnia {date.today()}"
