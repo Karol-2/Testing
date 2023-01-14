@@ -1,3 +1,9 @@
+import os
+from datetime import date
+
+import requests
+
+
 class Konto:
     def __init__(self, imie, nazwisko, pesel, kod_rabatowy=None):
         self.imie = imie
@@ -41,11 +47,21 @@ class Konto:
         ostatnie3 = self.historia[-3:]
         ostatnie5 = self.historia[-5:]
 
-        if len(self.historia) >=5 and ostatnie3[0]>0 and ostatnie3[1]>0 and ostatnie5[2]>0: # a
-            if sum(ostatnie5) > kwota: # b
+        if len(self.historia) >= 5 and ostatnie3[0] > 0 and ostatnie3[1] > 0 and ostatnie5[2] > 0:  # a
+            if sum(ostatnie5) > kwota:  # b
                 self.zaksieguj_przelew_przychodzacy(kwota)
                 return True
             else:
                 return False
+        else:
+            return False
+
+
+    def Wyslij_historie_na_mail(self, adresat, smtp_connector):
+        temat = f"Wyciąg z dnia {date.today()}"
+        tresc = f"Historia konta: {self.historia}"
+        powodzenie = smtp_connector.wyslij(temat, tresc, adresat)
+        if (powodzenie):
+            return True
         else:
             return False

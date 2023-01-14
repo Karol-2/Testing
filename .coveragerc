@@ -1,3 +1,4 @@
 [run]
 omit =
-       app/KontoFirmowe.py
+       app/KontoFirmowe.py,
+       app/SMTPConnection.py

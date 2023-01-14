@@ -1,6 +1,7 @@
 import unittest
 from app.Konto import Konto
 from app.KontoFirmowe import KontoFirmowe
+from unittest.mock import patch, MagicMock
 
 
 class TestKsiegowaniePrzelewow(unittest.TestCase):
@@ -38,7 +39,8 @@ class TestKsiegowaniePrzelewow(unittest.TestCase):
         konto.zaksieguj_przelew_przychodzacy(15)
         self.assertEqual(konto.saldo, 500 - 100 - 10 + 15, "Zły stan konta po serii przelewow")
 
-    def test_seria_przelewow_firma(self):
+    @patch('app.KontoFirmowe.KontoFirmowe.request_do_api', return_value=True)
+    def test_seria_przelewow_firma(self,mock):
         konto = KontoFirmowe(self.nazwa, self.nip)
         konto.saldo = 0
         konto.zaksieguj_przelew_przychodzacy(6000)
@@ -52,7 +54,8 @@ class TestKsiegowaniePrzelewow(unittest.TestCase):
         konto.przelew_express_wychodzacy(200)
         self.assertEqual(konto.saldo, 500 - 200 - 1, "Zła wartość dla przelewu ekspresowego, klient")
 
-    def test_przelew_ekspresowy_firma(self):
+    @patch('app.KontoFirmowe.KontoFirmowe.request_do_api', return_value=True)
+    def test_przelew_ekspresowy_firma(self,mock):
         konto = KontoFirmowe(self.nazwa, self.nip)
         konto.saldo = 500
         konto.przelew_express_wychodzacy(200)
@@ -64,7 +67,8 @@ class TestKsiegowaniePrzelewow(unittest.TestCase):
         konto.przelew_express_wychodzacy(500)
         self.assertEqual(konto.saldo, 500 - 500 - 1, "Zła wartość dla przelewu ekspresowego, klient")
 
-    def test_przelew_ekspresowy_firma_na_minusie(self):
+    @patch('app.KontoFirmowe.KontoFirmowe.request_do_api', return_value=True)
+    def test_przelew_ekspresowy_firma_na_minusie(self,mock):
         konto = KontoFirmowe(self.nazwa, self.nip)
         konto.saldo = 500
         konto.przelew_express_wychodzacy(500)

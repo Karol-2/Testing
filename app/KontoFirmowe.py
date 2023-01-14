@@ -1,6 +1,6 @@
 import os
 import requests
-from datetime import  date
+from datetime import date
 
 from app.Konto import Konto
 
@@ -12,10 +12,14 @@ class KontoFirmowe(Konto):
         self.historia = []
         self.oplata_za_ekspres = 5
         self.SprawdzanieNIP(nip)
+        self.czy_nip_istnieje(nip)
 
     def SprawdzanieNIP(self, NIP):
         if sum(a.isdigit() for a in NIP) == 10:
-            self.nip = NIP
+            if self.czy_nip_istnieje(NIP) is None:
+                self.nip = "Pranie!"
+            else:
+                self.nip = NIP
         else:
             self.nip = "Niepoprawny NIP!"
 
@@ -25,13 +29,22 @@ class KontoFirmowe(Konto):
             return True
         return False
 
-    @classmethod
-    def czy_nip_istnieje(cls,nip):
-        gov_url = os.getenv('BANK_APP_MF_URL',"https://wl-test.mf.gov.pl/")
-        data = date.today()
-        url =f"{gov_url}api/search/nip/{nip}?date={data}"
-        response = requests.get(url)
-        if response.status_code == 200:
+    def Wyslij_historie_na_mail(self, adresat, smtp_connector):
+        temat = f"Wyciąg z dnia {date.today()}"
+        tresc = f"Historia konta firmowego: {self.historia}"
+        result = smtp_connector.wyslij(temat, tresc, adresat)
+        if result:
             return True
         else:
-            cls.nip="PRANIE!!!"
+            return False
+
+    @classmethod
+    def czy_nip_istnieje(cls, nip):
+        gov_url = os.getenv('BANK_APP_MF_URL', 'https://wl-test.mf.gov.pl/')
+        data = date.today()
+        url = f"{gov_url}api/search/nip/{nip}?date={data}"
+        return cls.request_do_api(url)
+
+    @classmethod
+    def request_do_api(cls, url):
+        return requests.get(url).status_code == 200
