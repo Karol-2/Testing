@@ -59,7 +59,7 @@ class Konto:
 
     def Wyslij_historie_na_mail(self, adresat, smtp_connector):
         temat = f"Wyciąg z dnia {date.today()}"
-        tresc = f"Twoja historia konta to: {self.historia}"
+        tresc = f"Historia konta: {self.historia}"
         powodzenie = smtp_connector.wyslij(temat, tresc, adresat)
         if (powodzenie):
             return True
