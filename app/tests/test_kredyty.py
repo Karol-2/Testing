@@ -1,7 +1,7 @@
 import unittest
 from app.Konto import Konto
 from app.KontoFirmowe import KontoFirmowe
-
+from unittest.mock import patch
 from parameterized import parameterized
 
 
@@ -13,7 +13,8 @@ class TestKredyty(unittest.TestCase):
     nazwa = "Zabka"
     nip = "765-345-12-44"
 
-    def setUp(self):
+    @patch('app.KontoFirmowe.KontoFirmowe.request_do_api', return_value=True)
+    def setUp(self,mock):
         self.konto = Konto(self.imie, self.nazwisko, self.pesel)
         self.konto_firmowe = KontoFirmowe(self.nazwa, self.nip)
 
