@@ -16,10 +16,10 @@ class KontoFirmowe(Konto):
 
     def SprawdzanieNIP(self, NIP):
         if sum(a.isdigit() for a in NIP) == 10:
-            if self.czy_nip_istnieje(NIP) is None:
-                self.nip = "Pranie!"
-            else:
+            if self.czy_nip_istnieje(NIP):
                 self.nip = NIP
+            else:
+                self.nip = "Pranie!"
         else:
             self.nip = "Niepoprawny NIP!"
 
@@ -46,5 +46,5 @@ class KontoFirmowe(Konto):
         return cls.request_do_api(url)
 
     @classmethod
-    def request_do_api(cls, url):
+    def request_do_api(cls, url):  # pragma: no cover
         return requests.get(url).status_code == 200
