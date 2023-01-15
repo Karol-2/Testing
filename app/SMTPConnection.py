@@ -1,3 +1,3 @@
 class SMTPConnection:
-    def wyslij(self,temat,tresc,adresat):
+    def wyslij(self, temat, tresc, adresat):
         return False

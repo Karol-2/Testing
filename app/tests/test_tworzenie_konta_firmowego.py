@@ -1,6 +1,7 @@
 import unittest
 from app.KontoFirmowe import KontoFirmowe
 from unittest.mock import patch
+from unittest import mock
 
 
 class TestTworzeniaKontaFirmowego(unittest.TestCase):
@@ -31,3 +32,8 @@ class TestTworzeniaKontaFirmowego(unittest.TestCase):
         czysty_NIP = "4552341212"
         pierwsze_konto_firmowe = KontoFirmowe(self.nazwa, czysty_NIP)
         self.assertEqual(pierwsze_konto_firmowe.nip, "4552341212", "Nie akceptuje NIP bez myslników")
+
+    @patch('app.KontoFirmowe.KontoFirmowe.request_do_api', return_value=False)
+    def test_tworzenie_konta_firmowego_pranie(self, mock):
+        konto_pranie=KontoFirmowe("FirmaZPodlasia", "1111111111")
+        self.assertEqual(konto_pranie.nip, "Pranie!", "Pranie pieniędzy nie wykryte!")
